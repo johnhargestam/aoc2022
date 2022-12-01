@@ -1,7 +1,7 @@
 import run from 'aocrunner';
 
 const parseInput = (rawInput: string) =>
-  rawInput.split(/\n\n/).map((elf) => elf.split(/\n/).map((n) => +n));
+  rawInput.split(/\n\n/).map((list) => list.split(/\n/).map((n) => +n));
 
 const part1 = (rawInput: string) => {
   const inventories = parseInput(rawInput);
@@ -15,9 +15,17 @@ const part1 = (rawInput: string) => {
 };
 
 const part2 = (rawInput: string) => {
-  const input = parseInput(rawInput);
+  const inventories = parseInput(rawInput);
 
-  return;
+  const sums = inventories.reduce((sums, inventory) => [
+    ...sums,
+    inventory.reduce((sum, item) => sum + item, 0),
+  ]);
+
+  return [...sums]
+    .sort((a, b) => b - a)
+    .slice(0, 3)
+    .reduce((top3, sum) => top3 + sum, 0);
 };
 
 run({
