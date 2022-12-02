@@ -19,7 +19,7 @@ const isDraw = (opp: string, you: string) =>
 const winScore = (opp: string, you: string) =>
   isWin(opp, you) ? 6 : isDraw(opp, you) ? 3 : 0;
 
-const shapeScore = (you: string) => (you == 'X' ? 1 : you == 'Y' ? 2 : 3);
+const shapeScore = (shape: string) => (shape == 'X' ? 1 : shape == 'Y' ? 2 : 3);
 
 const playScore = (opp: string, you: string) =>
   shapeScore(you) + winScore(opp, you);
@@ -32,10 +32,31 @@ const part1 = (rawInput: string) => {
     .reduce((sum, score) => sum + score);
 };
 
+const targetScore = (result: string) =>
+  result == 'X' ? 0 : result == 'Y' ? 3 : 6;
+
+const winShape = (opp: string) => (opp == 'A' ? 'Y' : opp == 'B' ? 'Z' : 'X');
+
+const drawShape = (opp: string) => (opp == 'A' ? 'X' : opp == 'B' ? 'Y' : 'Z');
+
+const loseShape = (opp: string) => (opp == 'A' ? 'Z' : opp == 'B' ? 'X' : 'Y');
+
+const resultShape = (opp: string, result: string) =>
+  result == 'X'
+    ? loseShape(opp)
+    : result == 'Y'
+    ? drawShape(opp)
+    : winShape(opp);
+
+const resultScore = (opp: string, result: string) =>
+  shapeScore(resultShape(opp, result)) + targetScore(result);
+
 const part2 = (rawInput: string) => {
   const input = parseInput(rawInput);
 
-  return;
+  return input
+    .map(([opp, result]) => resultScore(opp, result))
+    .reduce((sum, score) => sum + score);
 };
 
 run({
@@ -53,10 +74,13 @@ C Z`,
   },
   part2: {
     tests: [
-      // {
-      //   input: ``,
-      //   expected: "",
-      // },
+      {
+        input: `
+A Y
+B X
+C Z`,
+        expected: 12,
+      },
     ],
     solution: part2,
   },
