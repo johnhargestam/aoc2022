@@ -1,13 +1,6 @@
 import run from 'aocrunner';
 
-const parseInput = (rawInput: string) =>
-  rawInput
-    .trim()
-    .split(/\n\s*/)
-    .map((line) => [
-      line.slice(0, line.length / 2).split(''),
-      line.slice(line.length / 2).split(''),
-    ]);
+const parseInput = (rawInput: string) => rawInput.trim().split(/\n\s*/);
 
 //char codes: A: 65, Z: 90, a: 97, z: 122
 //priorities: a-z: 1-26, A-Z: 27-52
@@ -16,16 +9,31 @@ const priority = (c: string) =>
 
 const part1 = (rawInput: string) =>
   parseInput(rawInput)
-    .map(([a, b]) => a.filter((c) => b.includes(c)).slice(0, 1))
-    .flat()
-    .map(priority)
+    .map((rucksack) => [
+      rucksack.slice(0, rucksack.length / 2).split(''),
+      rucksack.slice(rucksack.length / 2).split(''),
+    ])
+    .map(([c1, c2]) => c1.filter((c) => c2.includes(c)))
+    .map(([common]) => priority(common))
     .reduce((sum, p) => sum + p);
 
-const part2 = (rawInput: string) => {
-  const input = parseInput(rawInput);
-
-  return;
-};
+const part2 = (rawInput: string) =>
+  parseInput(rawInput)
+    .reduce(
+      (groups: string[][], single, i) =>
+        ((gi: number) => [
+          ...groups.slice(0, gi),
+          (groups[gi] || []).concat(single),
+        ])(Math.floor(i / 3)),
+      [],
+    )
+    .map(([first, ...rest]) =>
+      first
+        .split('')
+        .filter((c) => rest.every((rucksack) => rucksack.includes(c))),
+    )
+    .map(([common]) => priority(common))
+    .reduce((sum, p) => sum + p);
 
 run({
   part1: {
@@ -44,7 +52,18 @@ run({
     solution: part1,
   },
   part2: {
-    tests: [],
+    tests: [
+      {
+        input: `
+          vJrwpWtwJgWrhcsFMMfFFhFp
+          jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+          PmmdzqPrVvPwwTWBwg
+          wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+          ttgJtRGJQctTZtZT
+          CrZsJsPPZsGzwwsLwLmpwMDw`,
+        expected: 70,
+      },
+    ],
     solution: part2,
   },
   trimTestInputs: true,
