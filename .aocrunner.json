@@ -63,13 +63,13 @@
     },
     {
       "part1": {
-        "solved": false,
-        "result": "HQFMMPL",
+        "solved": true,
+        "result": "WHTLRMZRC",
         "attempts": [
           "HQFMMPL",
           "HQF MM PL"
         ],
-        "time": 1.2826
+        "time": 1.3885
       },
       "part2": {
         "solved": false,
