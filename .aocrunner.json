@@ -69,13 +69,13 @@
           "HQFMMPL",
           "HQF MM PL"
         ],
-        "time": 1.3885
+        "time": 1.2714
       },
       "part2": {
-        "solved": false,
-        "result": null,
+        "solved": true,
+        "result": "GMPMLWNMG",
         "attempts": [],
-        "time": null
+        "time": 1.0058
       }
     },
     {

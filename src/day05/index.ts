@@ -47,74 +47,39 @@ const parseInput = (rawInput: string): Input =>
     procedures: body.split(/\n/).map(toProcedure),
   }))(rawInput.split(/\n\n/));
 
-const moveStack = (
-  stacks: Stacks,
-  { amount, from, to }: Procedure,
-  i: number,
-) => {
-  if (stacks[from].length < amount) {
-    throw new Error(`procedure index ${i} was illegal`);
-  }
-  return {
-    ...stacks,
-    [from]: stacks[from].slice(amount),
-    [to]: stacks[from].slice(0, amount).reverse().concat(stacks[to]),
-  };
-};
+const moveCrates9000 = (stacks: Stacks, { amount, from, to }: Procedure) => ({
+  ...stacks,
+  [from]: stacks[from].slice(amount),
+  [to]: stacks[from].slice(0, amount).reverse().concat(stacks[to]),
+});
 
-const stacksToString = (stacks: Stacks) =>
-  [
-    Object.values(stacks)
-      .map((stack: string[]) => stack.length)
-      .map((n) => `${String(n).padStart(2, '0')}`)
-      .join('  '),
-  ]
-    .concat(
-      ((max: number) =>
-        [...Array(max).keys()].map((i) =>
-          Object.values(stacks)
-            .map((stack: string[]) =>
-              stack[i - (max - stack.length)]
-                ? `[${stack[i - (max - stack.length)]}] `
-                : '    ',
-            )
-            .join(''),
-        ))(
-        Math.max(
-          ...Object.values(stacks).map((stack: string[]) => stack.length),
-        ),
-      ),
-    )
-    .concat(' ' + Object.keys(stacks).join('   '))
-    .join('\n');
-
-const procedureToString = ({ amount, from, to }: Procedure) =>
-  `\nmove ${amount} from ${from} to ${to}\n`;
+const moveCrates9001 = (stacks: Stacks, { amount, from, to }: Procedure) => ({
+  ...stacks,
+  [from]: stacks[from].slice(amount),
+  [to]: stacks[from].slice(0, amount).concat(stacks[to]),
+});
 
 const part1 = (rawInput: string) =>
   Object.values(
     (({ stacks, procedures }) =>
-      procedures.reduce((stacks, procedure, i) => {
-        // const print = i == 0;
-        // if (print) {
-        //   console.log(stacksToString(stacks));
-        //   console.log(procedureToString(procedure));
-        // }
-        const newStacks = moveStack(stacks, procedure, i);
-        // if (print) {
-        //   console.log(stacksToString(newStacks));
-        // }
-        return newStacks;
-      }, stacks))(parseInput(rawInput)),
+      procedures.reduce(
+        (stacks, procedure) => moveCrates9000(stacks, procedure),
+        stacks,
+      ))(parseInput(rawInput)),
   )
     .map((stack) => stack.at(0) || '')
     .join('');
 
-const part2 = (rawInput: string) => {
-  const input = parseInput(rawInput);
-
-  return;
-};
+const part2 = (rawInput: string) =>
+  Object.values(
+    (({ stacks, procedures }) =>
+      procedures.reduce(
+        (stacks, procedure) => moveCrates9001(stacks, procedure),
+        stacks,
+      ))(parseInput(rawInput)),
+  )
+    .map((stack) => stack.at(0) || '')
+    .join('');
 
 run({
   part1: {
@@ -135,7 +100,20 @@ move 1 from 1 to 2`,
     solution: part1,
   },
   part2: {
-    tests: [],
+    tests: [
+      {
+        input: `    [D]    
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3 
+
+move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2`,
+        expected: 'MCD',
+      },
+    ],
     solution: part2,
   },
   trimTestInputs: false,
