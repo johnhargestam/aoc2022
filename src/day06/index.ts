@@ -2,19 +2,15 @@ import run from 'aocrunner';
 
 const parseInput = (rawInput: string) => rawInput.split('');
 
-const setOf = (...chars: string[]) => new Set(chars);
-
 const part1 = (rawInput: string) =>
   parseInput(rawInput).findIndex(
-    (_, i, arr) =>
-      i >= 3 && setOf(arr[i], arr[i - 1], arr[i - 2], arr[i - 3]).size == 4,
+    (_, i, arr) => i >= 3 && new Set(arr.slice(i - 3, i + 1)).size == 4,
   ) + 1;
 
-const part2 = (rawInput: string) => {
-  const input = parseInput(rawInput);
-
-  return;
-};
+const part2 = (rawInput: string) => 
+  parseInput(rawInput).findIndex(
+    (_, i, arr) => i >= 13 && new Set(arr.slice(i - 13, i + 1)).size == 14,
+  ) + 1;
 
 run({
   part1: {
@@ -43,7 +39,28 @@ run({
     solution: part1,
   },
   part2: {
-    tests: [],
+    tests: [
+      {
+        input: `mjqjpqmgbljsphdztnvjfqwrcgsmlb`,
+        expected: 19,
+      },
+      {
+        input: `bvwbjplbgvbhsrlpgdmjqwftvncz`,
+        expected: 23,
+      },
+      {
+        input: `nppdvjthqldpwncqszvftbrmjlhg`,
+        expected: 23,
+      },
+      {
+        input: `nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg`,
+        expected: 29,
+      },
+      {
+        input: `zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw`,
+        expected: 26,
+      },
+    ],
     solution: part2,
   },
   trimTestInputs: true,
