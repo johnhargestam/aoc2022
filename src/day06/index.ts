@@ -7,7 +7,7 @@ const part1 = (rawInput: string) =>
     (_, i, arr) => i >= 3 && new Set(arr.slice(i - 3, i + 1)).size == 4,
   ) + 1;
 
-const part2 = (rawInput: string) => 
+const part2 = (rawInput: string) =>
   parseInput(rawInput).findIndex(
     (_, i, arr) => i >= 13 && new Set(arr.slice(i - 13, i + 1)).size == 14,
   ) + 1;
