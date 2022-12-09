@@ -62,11 +62,11 @@ const render = ({ name, children, files }: Directory, depth = 0): string =>
   );
 
 const listSizes = ({ name, children, files }: Directory): DirectorySize[] => {
-  const sizes = children.map((child) => listSizes(child)).flat();
-  const dirSize = sizes.reduce((size, child) => size + child.size, 0);
-  const fileSize = files.reduce((size, file) => size + file.size, 0);
+  const childSizes = children.map((child) => listSizes(child)).flat();
+  const childTotal = childSizes.reduce((size, child) => size + child.size, 0);
+  const fileTotal = files.reduce((size, file) => size + file.size, 0);
 
-  return [{ name, size: dirSize + fileSize }].concat(sizes);
+  return [{ name, size: childTotal + fileTotal }].concat(childSizes);
 };
 
 const part1 = (rawInput: string) => {
@@ -92,6 +92,8 @@ const part1 = (rawInput: string) => {
     },
     { current: root, history },
   );
+
+  return render(root);
 
   return listSizes(root)
     .filter(({ size }) => size <= 100000)
