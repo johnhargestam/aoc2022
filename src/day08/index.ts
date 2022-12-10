@@ -62,8 +62,6 @@ class TreeGrid {
   }
 }
 
-const range = (length: number) => [...Array(length).keys()];
-
 const parseInput = (rawInput: string): TreeGrid => {
   const trees = rawInput.split(/\n/).map((line, y) =>
     line

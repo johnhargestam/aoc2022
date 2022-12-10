@@ -29,3 +29,5 @@
  *     import { myUtil } from '../utils'
  *
  */
+
+export const range = (length: number): number[] => [...Array(length).keys()];

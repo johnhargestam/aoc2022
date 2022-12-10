@@ -1,4 +1,5 @@
 import run from 'aocrunner';
+import { range } from '../utils/index.js';
 
 interface Vector {
   dx: number;
@@ -23,8 +24,6 @@ interface Position {
   x: number;
   y: number;
 }
-
-const range = (length: number): number[] => [...Array(length).keys()];
 
 const absoluteDecrement = (n: number): number =>
   n > 0 ? n - 1 : n < 0 ? n + 1 : n;
