@@ -30,4 +30,5 @@
  *
  */
 
-export const range = (length: number): number[] => [...Array(length).keys()];
+export const range = (length: number, start = 0): number[] =>
+  [...Array(length).keys()].map((i) => i + start);

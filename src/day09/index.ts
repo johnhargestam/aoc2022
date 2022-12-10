@@ -67,36 +67,86 @@ const vectorBetween = (from: Position, to: Position): Vector => ({
   dy: to.y - from.y,
 });
 
-interface State {
-  head: Position;
-  tail: Position;
-  history: Position[];
-}
-
 const part1 = (rawInput: string) => {
-  const { history } = parseInput(rawInput).reduce(
-    ({ head, tail, history }: State, vector) => {
+  const { steps } = parseInput(rawInput).reduce(
+    ({ head, tail, steps }, vector) => {
       const updatedHead = move(head, vector);
-      const steps = stepsInDirection(tail, vectorBetween(tail, updatedHead));
+      const vectorToHead = vectorBetween(tail, updatedHead);
+      const newSteps = stepsInDirection(tail, vectorToHead);
+      const updatedTail = newSteps.at(-1) || tail;
       return {
         head: updatedHead,
-        tail: steps.at(-1) || tail,
-        history: [...history, ...steps],
+        tail: updatedTail,
+        steps: steps.concat(newSteps),
       };
     },
     {
       head: { x: 0, y: 0 },
       tail: { x: 0, y: 0 },
-      history: [{ x: 0, y: 0 }],
+      steps: [{ x: 0, y: 0 }],
     },
   );
-  return new Set(history.map(({ x, y }) => [x, y].join())).size;
+  return new Set(steps.map(({ x, y }) => [x, y].join())).size;
 };
 
-const part2 = (rawInput: string) => {
-  const input = parseInput(rawInput);
+const point = (point: Position, head: Position, tails: Position[]) => {
+  if (head.x == point.x && head.y == point.y) {
+    return 'H';
+  }
+  const i = tails.findIndex((tail) => tail.x == point.x && tail.y == point.y);
+  return i >= 0 ? `${i + 1}` : '.';
+};
 
-  return;
+const render = (
+  min: Position,
+  max: Position,
+  head: Position,
+  tails: Position[],
+) =>
+  range(max.y - min.y + 1, min.y)
+    .map((y) =>
+      range(max.x - min.x + 1, min.x)
+        .map((x) => point({ x, y }, head, tails))
+        .join(''),
+    )
+    .join('\n');
+
+const part2 = (rawInput: string) => {
+  const { steps } = parseInput(rawInput).reduce(
+    ({ head, tails, steps }, vector) => {
+      const updatedHead = move(head, vector);
+
+      const {updatedTails, newSteps } = tails.reduce(
+        ({ updatedTails }, tail, i) => {
+          const targetPosition = updatedTails[i - 1] || updatedHead;
+          const vectorToTarget = vectorBetween(tail, targetPosition);
+          const tailSteps = stepsInDirection(tail, vectorToTarget);
+          return {
+            updatedTails: updatedTails.concat(tailSteps.at(-1) || tail),
+            newSteps: tailSteps,
+          };
+        },
+        {
+          updatedTails: [] as Position[],
+          newSteps: [] as Position[],
+        },
+      );
+      // console.log(
+      //   render({ x: -11, y: -15 }, { x: 14, y: 5 }, updatedHead, updatedTails) + '\n',
+      // );
+      return {
+        head: updatedHead,
+        tails: updatedTails,
+        steps: steps.concat(newSteps)
+      };
+    },
+    {
+      head: { x: 0, y: 0 },
+      tails: range(9).map(() => ({ x: 0, y: 0 })),
+      steps: [{ x: 0, y: 0 }],
+    },
+  );
+  return new Set(steps.map(({ x, y }) => [x, y].join())).size;
 };
 
 run({
@@ -118,7 +168,32 @@ run({
     solution: part1,
   },
   part2: {
-    tests: [],
+    tests: [
+      {
+        input: `
+            R 4
+            U 4
+            L 3
+            D 1
+            R 4
+            D 1
+            L 5
+            R 2`,
+        expected: 1,
+      },
+        {
+          input: `
+            R 5
+            U 8
+            L 8
+            D 3
+            R 17
+            D 10
+            L 25
+            U 20`,
+          expected: 36,
+        },
+    ],
     solution: part2,
   },
   trimTestInputs: true,
