@@ -93,7 +93,7 @@ const part1 = (rawInput: string) => {
     { current: root, history },
   );
 
-  return render(root);
+  //return render(root);
 
   return listSizes(root)
     .filter(({ size }) => size <= 100000)

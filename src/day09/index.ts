@@ -116,7 +116,7 @@ const part2 = (rawInput: string) => {
     ({ head, tails, steps }, vector) => {
       const updatedHead = move(head, vector);
 
-      const {updatedTails, newSteps } = tails.reduce(
+      const { updatedTails, newSteps } = tails.reduce(
         ({ updatedTails }, tail, i) => {
           const targetPosition = updatedTails[i - 1] || updatedHead;
           const vectorToTarget = vectorBetween(tail, targetPosition);
@@ -137,7 +137,7 @@ const part2 = (rawInput: string) => {
       return {
         head: updatedHead,
         tails: updatedTails,
-        steps: steps.concat(newSteps)
+        steps: steps.concat(newSteps),
       };
     },
     {
@@ -181,8 +181,8 @@ run({
             R 2`,
         expected: 1,
       },
-        {
-          input: `
+      {
+        input: `
             R 5
             U 8
             L 8
@@ -191,8 +191,8 @@ run({
             D 10
             L 25
             U 20`,
-          expected: 36,
-        },
+        expected: 36,
+      },
     ],
     solution: part2,
   },
