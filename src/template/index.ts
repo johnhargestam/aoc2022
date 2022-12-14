@@ -2,11 +2,7 @@ import run from 'aocrunner';
 
 const parseInput = (rawInput: string) => rawInput;
 
-const part1 = (rawInput: string) => {
-  const input = parseInput(rawInput);
-
-  return;
-};
+const part1 = (rawInput: string) => parseInput(rawInput);
 
 const part2 = (rawInput: string) => {
   const input = parseInput(rawInput);
@@ -19,7 +15,7 @@ run({
     tests: [
       {
         input: ``,
-        expected: '',
+        expected: undefined,
       },
     ],
     solution: part1,
