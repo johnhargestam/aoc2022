@@ -24,7 +24,7 @@ const createHasPosition =
 const createAddVisit =
   (previous: Set<number>, xMax: number) =>
   ({ x, y }: Position): Visited =>
-    createVisited( new Set([...previous, x + y * xMax]), xMax);
+    createVisited(new Set([...previous, x + y * xMax]), xMax);
 
 const createVisited = (set: Set<number>, xMax: number): Visited => ({
   hasPosition: createHasPosition(set, xMax),
@@ -106,10 +106,7 @@ const fewestStepsToEnd = (
     .reduce(
       ([progress, visited], next) =>
         !visited.hasPosition(next)
-          ? [
-              progress.enqueue(next, steps + 1),
-              visited.addVisit(next),
-            ]
+          ? [progress.enqueue(next, steps + 1), visited.addVisit(next)]
           : [progress, visited],
       [progress, visited],
     );
