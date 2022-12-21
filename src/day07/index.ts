@@ -64,7 +64,7 @@ const parseInput = (rawInput: string): Folder[] =>
 
 const byDepthDescending = (a: Folder, b: Folder) => b.depth - a.depth;
 
-const getSizes = (folders: Folder[]) =>
+const toSizes = (folders: Folder[]) =>
   Object.values(
     folders
       .sort(byDepthDescending)
@@ -78,15 +78,28 @@ const getSizes = (folders: Folder[]) =>
       }, {}),
   );
 
+const MAX_SIZE = 100000;
+
 const part1 = (rawInput: string) =>
-  getSizes(parseInput(rawInput))
-    .filter((size) => size <= 100000)
+  toSizes(parseInput(rawInput))
+    .filter((size) => size <= MAX_SIZE)
     .reduce((sum, size) => sum + size);
 
-const part2 = (rawInput: string) => {
-  const input = parseInput(rawInput);
+const { max, min } = Math;
 
-  return;
+const TOTAL_SPACE = 70000000;
+const NEEDED_SPACE = 30000000;
+
+const requiredSpace = (sizes: number[]) => {
+  const usedSpace = max(...sizes);
+  const unusedSpace = TOTAL_SPACE - usedSpace;
+  return NEEDED_SPACE - unusedSpace;
+};
+
+const part2 = (rawInput: string) => {
+  const sizes = toSizes(parseInput(rawInput));
+  const required = requiredSpace(sizes);
+  return min(...sizes.filter((size) => size >= required));
 };
 
 run({
